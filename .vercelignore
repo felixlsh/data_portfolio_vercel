@@ -1,0 +1,8 @@
+node_modules
+.git
+dist
+.lovable
+deployment-transfer
+*.zip
+.env*
+.vercel

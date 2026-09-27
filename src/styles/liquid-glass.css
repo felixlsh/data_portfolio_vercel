@@ -1,0 +1,130 @@
+/* Restrained glass: tinted transmission, a fine curved rim, and a soft reflection. */
+:root {
+  --glass-surface: linear-gradient(125deg, hsl(216 42% 19% / .76), hsl(224 35% 10% / .72) 53%, hsl(233 33% 16% / .72));
+  --glass-border: hsl(214 52% 73% / .2);
+  --glass-rim: linear-gradient(135deg, hsl(205 75% 85% / .36), hsl(220 40% 85% / .04) 34%, hsl(220 40% 85% / .05) 70%, hsl(250 60% 78% / .25));
+  --glass-reflection: 210 65% 93%;
+  --glass-shadow: 0 12px 32px -22px hsl(224 75% 2% / .8);
+}
+
+.light {
+  --glass-surface: linear-gradient(125deg, hsl(212 55% 97% / .86), hsl(0 0% 100% / .72) 53%, hsl(228 55% 96% / .8));
+  --glass-border: hsl(216 35% 65% / .25);
+  --glass-rim: linear-gradient(135deg, hsl(0 0% 100% / .8), hsl(216 35% 70% / .08) 40%, hsl(220 50% 100% / .45) 74%, hsl(235 45% 68% / .2));
+  --glass-reflection: 215 45% 100%;
+  --glass-shadow: 0 12px 32px -24px hsl(222 35% 30% / .25);
+}
+
+.project-page {
+  background-image:
+    radial-gradient(ellipse 38rem 18rem at 12% 1rem, hsl(var(--primary) / .13), transparent 76%),
+    radial-gradient(ellipse 34rem 18rem at 88% 8rem, hsl(var(--accent) / .07), transparent 76%);
+}
+
+.glass-panel,
+.glass-card,
+.glass-control {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / .065), inset 0 -1px 0 hsl(210 60% 85% / .035), var(--glass-shadow);
+}
+
+.glass-panel {
+  background: var(--glass-surface);
+  -webkit-backdrop-filter: blur(20px) saturate(125%);
+  backdrop-filter: blur(20px) saturate(125%);
+}
+
+.glass-card {
+  background:
+    radial-gradient(ellipse at 100% 100%, hsl(var(--accent) / .065), transparent 65%),
+    linear-gradient(135deg, hsl(var(--primary) / .055), transparent 55%),
+    hsl(var(--card) / .86);
+  --glass-shadow: 0 16px 36px -30px hsl(224 55% 3% / .4);
+}
+
+.glass-card--accent {
+  background: linear-gradient(135deg, hsl(var(--primary) / .12), hsl(var(--card) / .82) 75%);
+}
+
+.glass-control {
+  background: linear-gradient(145deg, hsl(210 60% 90% / .075), hsl(220 50% 80% / .015) 60%), hsl(var(--card) / .32);
+  --glass-shadow: 0 5px 12px -10px hsl(224 55% 3% / .5);
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.glass-control:hover {
+  border-color: hsl(var(--primary-glow) / .32);
+}
+
+.glass-cta {
+  background: linear-gradient(145deg, hsl(var(--foreground)), hsl(var(--foreground) / .87));
+  color: hsl(var(--background));
+  border-color: hsl(var(--foreground) / .45);
+}
+
+.glass-icon {
+  background: linear-gradient(135deg, hsl(var(--primary) / .15), hsl(var(--card) / .7));
+  border-color: hsl(var(--primary-glow) / .28);
+}
+
+.glass-panel::before,
+.glass-card::before,
+.glass-control::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--glass-rim);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-panel::after,
+.glass-card::after,
+.glass-control::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: radial-gradient(220px circle at var(--glass-x, 35%) var(--glass-y, 0%), hsl(var(--glass-reflection) / .065), transparent 72%);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-card::before { opacity: .65; }
+.glass-control::after { background-size: auto; }
+.glass-reflecting::after { opacity: 1; }
+
+/* Avoid stacking several expensive blur surfaces on small or touch screens. */
+@media (max-width: 767px) {
+  .glass-panel {
+    -webkit-backdrop-filter: blur(14px) saturate(115%);
+    backdrop-filter: blur(14px) saturate(115%);
+  }
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .glass-panel::after, .glass-card::after, .glass-control::after { display: none; }
+}
+
+.motion-off .glass-panel::after,
+.motion-off .glass-card::after,
+.motion-off .glass-control::after { display: none; }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-panel { background: hsl(var(--card) / .97); }
+}
+
+@media (forced-colors: active) {
+  .glass-panel, .glass-card, .glass-control { background: Canvas; border: 1px solid CanvasText; }
+  .glass-panel::before, .glass-card::before, .glass-control::before,
+  .glass-panel::after, .glass-card::after, .glass-control::after { display: none; }
+}
