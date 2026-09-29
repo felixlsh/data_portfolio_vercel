@@ -62,7 +62,7 @@ const ProjectDetail = () => {
                   "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold",
                   isLive
                     ? "bg-primary/20 text-primary-glow"
-                    : "bg-emerald-500/15 text-emerald-300"
+                    : "bg-emerald-500/15 text-emerald-300 [.light_&]:text-emerald-800"
                 )}
               >
                 <span
